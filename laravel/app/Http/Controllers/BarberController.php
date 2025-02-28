@@ -6,7 +6,7 @@ use App\Models\Barber;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreBarberRequest;
 use App\Http\Requests\UpdateBarberRequest;
-use Nette\Schema\ValidationException;
+use Illuminate\Validation\ValidationException;
 
 class BarberController extends Controller
 {
@@ -35,7 +35,7 @@ class BarberController extends Controller
         try 
         {
             $request->validate([
-                'barber_name'=>'required|max: 255'
+                'barber_name'=>'required|string|max: 255'
             ]);
         } 
         catch (ValidationException $e) 
@@ -77,8 +77,10 @@ class BarberController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Barber $barber)
+    public function destroy(Request $request)
     {
-        //
+        $barber = barber::find($request->id);
+        $barber->delete();
+        return response()->json(["success" => true, "uzenet" => $barber->barber_name." törölve!"], 200, ["Access-Control-Allow-Origin" => "*"], JSON_UNESCAPED_UNICODE);
     }
 }
