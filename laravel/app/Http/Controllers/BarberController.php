@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Barber;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreBarberRequest;
 use App\Http\Requests\UpdateBarberRequest;
+use Nette\Schema\ValidationException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BarberController extends Controller
 {
@@ -13,7 +16,8 @@ class BarberController extends Controller
      */
     public function index()
     {
-        //
+        $barbers=Barber::all();
+        return response()->json($barbers,200,['Access-Control-Allow-Origin'=>"*"],JSON_UNESCAPED_UNICODE);
     }
 
     /**
@@ -29,7 +33,22 @@ class BarberController extends Controller
      */
     public function store(StoreBarberRequest $request)
     {
-        //
+        try 
+        {
+            $request->validate([
+                'barber_name'=>'required|max: 255'
+            ]);
+        } 
+        catch (ValidationException $e) 
+        {
+            return response()->json([
+                'message'=>'Hiba',
+            ],400);
+        }
+        $barber=Barber::create([
+            'barber_name'=>$request->input('barber_name'),
+        ]);
+        return response()->json(['success'=>true,'uzenet'=>$barber->barber_name.'rögzítve'],200, ['Access-Control-Allow-Origin'=>'*'], JSON_UNESCAPED_UNICODE);
     }
 
     /**
