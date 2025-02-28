@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreBarberRequest;
 use App\Http\Requests\UpdateBarberRequest;
 use Nette\Schema\ValidationException;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BarberController extends Controller
 {
@@ -31,7 +30,7 @@ class BarberController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBarberRequest $request)
+    public function store(Request $request)
     {
         try 
         {
@@ -48,7 +47,7 @@ class BarberController extends Controller
         $barber=Barber::create([
             'barber_name'=>$request->input('barber_name'),
         ]);
-        return response()->json(['success'=>true,'uzenet'=>$barber->barber_name.'rögzítve'],200, ['Access-Control-Allow-Origin'=>'*'], JSON_UNESCAPED_UNICODE);
+        return response()->json(['success'=>true,'uzenet'=>$barber->barber_name.' rögzítve'],200, ['Access-Control-Allow-Origin'=>'*'], JSON_UNESCAPED_UNICODE);
     }
 
     /**
